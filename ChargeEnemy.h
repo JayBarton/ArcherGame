@@ -3,7 +3,6 @@
 #include "Sprite.h"
 #include "Physics.h"
 #include "WalkBehaviour.h"
-#include "ChargeBehaviour.h"
 
 #include "Enemy.h"
 
