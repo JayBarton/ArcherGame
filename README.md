@@ -1,1 +1,2 @@
-itch.io and youtube link coming soon
+itch.io : https://isanelegy.itch.io/archergame
+Footage : https://www.youtube.com/watch?v=IsnJruUyNic
