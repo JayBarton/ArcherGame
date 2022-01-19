@@ -1,0 +1,113 @@
+#version 330 core
+in  vec2  TexCoords;
+out vec4  color;
+  
+uniform sampler2D scene;
+uniform vec2      offsets[9];
+uniform int       edge_kernel[9];
+uniform float     blur_kernel[9];
+
+uniform bool shake;
+
+uniform float alpha;
+
+
+vec2 offset(float progress, float x, float theta) {
+  float phase = progress*progress + progress + theta;
+  float shifty = 0.03*progress*cos(10.0*(progress+x));
+  return vec2(0, shifty);
+}
+
+
+void main()
+{
+    vec3 sample[9];
+    // sample from texture offsets if using convolution matrix
+    if(shake)
+	{
+        for(int i = 0; i < 9; i++)
+		{
+            sample[i] = vec3(texture(scene, TexCoords.st + offsets[i]));
+		}
+	}
+			
+	for(int i = 0; i < 9; i++)
+	{
+		sample[i] = vec3(texture(scene, TexCoords.st + offsets[i]));
+		//color += vec4(sample[i] * edge_kernel[i], 0.0f);
+	}
+	color.a = 1.0f;
+    // process effects
+	/*if(shake)
+    {
+        for(int i = 0; i < 9; i++)
+		{
+			sample[i] = vec3(texture(scene, TexCoords.st + offsets[i]));
+            color += vec4(sample[i] * blur_kernel[i], 0.0f);
+		}
+        color.a = 1.0f;
+    }*/
+  //  else
+    {
+		//fade out effect
+	    color = vec4(vec3(texture(scene, TexCoords) + alpha), 1.0f);
+		//color = mix(texture(scene, TexCoords+ offset(alpha, texture(scene, TexCoords).x, 0.0)) ,  vec4(1.0, 1.0, 1.0, 1.0), alpha);
+		//mix(getFromColor(p + offset(progress, p.x, 0.0)), getToColor(p + offset(1.0-progress, p.x, 3.14)), progress);
+		//color =  mix(texture(scene, TexCoords), texture(scene, TexCoords) + 1, alpha);
+		//color =  mix(texture(scene, TexCoords), vec4(1.0, 1.0, 1.0, 1.0), alpha);
+		
+		//color = vec4(vec3(texture(scene, TexCoords)), 1.0f);
+		
+		/*color.r = mix(color.r, 0, alpha*1);
+		color.g = mix(color.g, 0, alpha * 2);
+		color.b = mix(color.b, 0, alpha*2.0);*/
+
+		float maxColor = max(color.r, max(color.g, color.b));
+		
+		//color -= average * alpha;
+		/*if(maxColor == color.r)
+		{
+			color.r -= 1.0f * alpha;
+			color.g -= 2.0f * alpha;
+			color.b -= 2.0f * alpha;
+		}
+		else if(maxColor == color.g)
+		{
+			color.r -= 2.0f * alpha;
+			color.g -= 1.0f * alpha;
+			color.b -= 2.0f * alpha;
+		}
+		else
+		{
+			color.r -= 2.0f * alpha;
+			color.g -= 2.0f * alpha;
+			color.b -= 1.0f * alpha;
+		}*/
+		
+	/*	if(maxColor == color.r)
+		{
+			color.r = mix(color.r, 0, alpha * 2);
+			color.g = mix(color.g, 0, alpha * 1);
+			color.b = mix(color.b, 0, alpha * 1);
+		}
+		else if(maxColor == color.g)
+		{
+			color.r = mix(color.r, 0, alpha * 1);
+			color.g = mix(color.g, 0, alpha * 2);
+			color.b = mix(color.b, 0, alpha * 1);
+		}
+		else
+		{
+			color.r = mix(color.r, 0, alpha * 1);
+			color.g = mix(color.g, 0, alpha * 1);
+			color.b = mix(color.b, 0, alpha * 2);
+		}*/
+		
+		//color.r -= 1.0f * alpha;
+		//color.g -= 2.0f * alpha;
+		//color.b -= 1.0f * alpha;
+
+       //color =  texture(scene, TexCoords);
+		//color.a = 1 - alpha;
+    }
+}

@@ -1,0 +1,5 @@
+Move with the left and right arrow keys
+Crouch with the down key
+Jump with the W key. Hold for higher jumps!
+Fire arrow with the Q key. Hold to charge for a stronger shot! 
+Use the arrow keys to aim your shot

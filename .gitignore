@@ -1,0 +1,11 @@
+bin/
+obj/
+WIP UI/
+Textures/WIP/
+Sounds/GameMusic.zip
+ArcherGame.depend
+ArcherGame.layout
+ArcherGame.cbp
+TODO.txt
+ArcherGame.ico
+icon.rc

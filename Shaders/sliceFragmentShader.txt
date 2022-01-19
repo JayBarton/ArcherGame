@@ -1,0 +1,57 @@
+#version 330 core
+
+in vec2 TextureCoordinates;
+
+uniform sampler2D tex;
+
+uniform vec2 u_dimensions;
+uniform vec2 u_border;
+uniform vec4 spriteColor;
+uniform vec4 bounds;
+
+
+float map(float value, float originalMin, float originalMax, float newMin, float newMax) {
+    return (value - originalMin) / (originalMax - originalMin) * (newMax - newMin) + newMin;
+}
+
+// Helper function, because WET code is bad code
+// Takes in the coordinate on the current axis and the borders 
+float processAxis(float coord, float textureBorder, float windowBorder, float x, float z) 
+{
+    if (coord < windowBorder)
+        return map(coord, 0, windowBorder, 0, textureBorder) ;
+    if (coord < 1 - windowBorder) 
+        return map(coord,  windowBorder, 1 - windowBorder, textureBorder, 1 - textureBorder);
+    return map(coord, 1 - windowBorder, 1, 1 - textureBorder, 1);
+} 
+
+vec2 subspriteMap(vec2 inner) 
+{
+    return mix(vec2(bounds.x, bounds.z), vec2(bounds.y, bounds.w), inner.xy);
+}
+
+void main(void) 
+{
+    vec2 newUV = vec2(
+        processAxis(TextureCoordinates.x, u_border.x, u_dimensions.x, bounds.x, bounds.y),
+        processAxis(TextureCoordinates.y, u_border.y, u_dimensions.y, bounds.z, bounds.w)
+    );
+	
+	 newUV = subspriteMap(newUV);
+	/*vec2 u_dimensions = vec2(32);
+	    vec2 coords = TextureCoordinates * u_dimensions;
+		float u_radius = 8/32;
+    if (length(coords - vec2(0)) < u_radius ||
+        length(coords - vec2(0, u_dimensions.y)) < u_radius ||
+        length(coords - vec2(u_dimensions.x, 0)) < u_radius ||
+        length(coords - u_dimensions) < u_radius) {
+        discard;
+    }
+	//else
+	{
+	    gl_FragColor = vec4(spriteColor) * texture2D(tex, coords);
+
+	}*/
+	gl_FragColor = vec4(spriteColor) * texture2D(tex, newUV);
+
+}
